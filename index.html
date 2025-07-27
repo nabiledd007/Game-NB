@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,6 +22,8 @@
             --dark: #1a1a2e;
             --light: #f8f9fa;
             --card-bg: rgba(255, 255, 255, 0.1);
+            --menu-bg: rgba(26, 26, 46, 0.95);
+            --menu-active: #4cc9f0;
         }
 
         body {
@@ -33,6 +35,7 @@
             padding: 20px;
             color: white;
             overflow-x: hidden;
+            padding-bottom: 80px; /* Space for bottom menu */
         }
 
         .container {
@@ -44,6 +47,92 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Modern Bottom Menu */
+        .bottom-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--menu-bg);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu-item i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item span {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .menu-item.active {
+            color: white;
+            background: rgba(76, 201, 240, 0.2);
+            transform: translateY(-10px);
+        }
+
+        .menu-item.active i {
+            color: var(--menu-active);
+            transform: scale(1.1);
+        }
+
+        .menu-item.active::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            width: 30px;
+            height: 3px;
+            background: var(--menu-active);
+            border-radius: 3px;
+        }
+
+        .menu-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Notification badge */
+        .menu-badge {
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            background: var(--danger);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
 
         header {
@@ -624,6 +713,67 @@
             opacity: 1;
         }
 
+        /* Score display styles */
+        .score-display {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid var(--warning);
+            text-align: center;
+        }
+
+        .score-display h3 {
+            color: var(--warning);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--warning);
+            text-shadow: 0 0 15px rgba(248, 150, 30, 0.6);
+            font-family: monospace;
+        }
+
+        /* Input group styles */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+        }
+
+        .score-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .score-btn {
+            width: 50px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .score-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .score-btn.selected {
+            background: var(--success);
+            color: white;
+        }
+
         @media (max-width: 992px) {
             .categories-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -656,6 +806,20 @@
             .answers-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .score-buttons {
+                justify-content: center;
+            }
+            
+            .score-btn {
+                width: 40px;
+                height: 40px;
+                padding: 5px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -678,6 +842,26 @@
             .player-card {
                 min-width: 140px;
                 padding: 15px;
+            }
+            
+            .bottom-menu {
+                padding: 8px 0;
+            }
+            
+            .menu-item {
+                padding: 5px 10px;
+            }
+            
+            .menu-item i {
+                font-size: 1.3rem;
+            }
+            
+            .menu-item span {
+                font-size: 0.7rem;
+            }
+            
+            .score-value {
+                font-size: 2.5rem;
             }
         }
     </style>
@@ -795,6 +979,12 @@
         
         <!-- Game Section -->
         <div id="game-section" class="game-section">
+            <!-- Score Display -->
+            <div class="score-display">
+                <h3><i class="fas fa-star"></i> <span data-translate="your_score">Your Score</span></h3>
+                <div class="score-value" id="total-score">0</div>
+            </div>
+            
             <div class="game-header">
                 <div class="info">
                     <h2 style="color: var(--success);"><span data-translate="game_code">Game Code</span>: <span id="current-game-code">A1B2C3</span></h2>
@@ -810,52 +1000,112 @@
             <div class="categories-grid">
                 <div class="category-card">
                     <h4><i class="fas fa-male"></i> <span data-translate="boys_name">Boy's Name</span></h4>
-                    <input type="text" id="boy-name" placeholder="Enter a boy's name">
+                    <div class="input-group">
+                        <input type="text" id="boy-name" placeholder="Enter a boy's name">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="boy-name" data-value="0">0</button>
+                            <button class="score-btn" data-category="boy-name" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-female"></i> <span data-translate="girls_name">Girl's Name</span></h4>
-                    <input type="text" id="girl-name" placeholder="Enter a girl's name">
+                    <div class="input-group">
+                        <input type="text" id="girl-name" placeholder="Enter a girl's name">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="girl-name" data-value="0">0</button>
+                            <button class="score-btn" data-category="girl-name" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-apple-alt"></i> <span data-translate="fruit">Fruit</span></h4>
-                    <input type="text" id="fruit" placeholder="Enter a fruit">
+                    <div class="input-group">
+                        <input type="text" id="fruit" placeholder="Enter a fruit">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="fruit" data-value="0">0</button>
+                            <button class="score-btn" data-category="fruit" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-carrot"></i> <span data-translate="vegetable">Vegetable</span></h4>
-                    <input type="text" id="vegetable" placeholder="Enter a vegetable">
+                    <div class="input-group">
+                        <input type="text" id="vegetable" placeholder="Enter a vegetable">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="vegetable" data-value="0">0</button>
+                            <button class="score-btn" data-category="vegetable" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-couch"></i> <span data-translate="object">Inanimate Object</span></h4>
-                    <input type="text" id="object" placeholder="Enter an object">
+                    <div class="input-group">
+                        <input type="text" id="object" placeholder="Enter an object">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="object" data-value="0">0</button>
+                            <button class="score-btn" data-category="object" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-paw"></i> <span data-translate="animal">Animal</span></h4>
-                    <input type="text" id="animal" placeholder="Enter an animal">
+                    <div class="input-group">
+                        <input type="text" id="animal" placeholder="Enter an animal">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="animal" data-value="0">0</button>
+                            <button class="score-btn" data-category="animal" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-briefcase"></i> <span data-translate="profession">Profession</span></h4>
-                    <input type="text" id="profession" placeholder="Enter a profession">
+                    <div class="input-group">
+                        <input type="text" id="profession" placeholder="Enter a profession">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="profession" data-value="0">0</button>
+                            <button class="score-btn" data-category="profession" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-city"></i> <span data-translate="city">City</span></h4>
-                    <input type="text" id="city" placeholder="Enter a city">
+                    <div class="input-group">
+                        <input type="text" id="city" placeholder="Enter a city">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="city" data-value="0">0</button>
+                            <button class="score-btn" data-category="city" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-globe-americas"></i> <span data-translate="country">Country</span></h4>
-                    <input type="text" id="country" placeholder="Enter a country">
+                    <div class="input-group">
+                        <input type="text" id="country" placeholder="Enter a country">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="country" data-value="0">0</button>
+                            <button class="score-btn" data-category="country" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="category-card">
                     <h4><i class="fas fa-tshirt"></i> <span data-translate="clothing">Clothing</span></h4>
-                    <input type="text" id="clothing" placeholder="Enter clothing item">
+                    <div class="input-group">
+                        <input type="text" id="clothing" placeholder="Enter clothing item">
+                        <div class="score-buttons">
+                            <button class="score-btn" data-category="clothing" data-value="0">0</button>
+                            <button class="score-btn" data-category="clothing" data-value="1">1</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -882,6 +1132,27 @@
         <div id="status-message" class="status-message"></div>
     </div>
     
+    <!-- Modern Bottom Menu -->
+    <div class="bottom-menu">
+        <a href="#" class="menu-item active" id="menu-home">
+            <i class="fas fa-home"></i>
+            <span data-translate="menu_home">Home</span>
+        </a>
+        <a href="#" class="menu-item" id="menu-games">
+            <i class="fas fa-gamepad"></i>
+            <span data-translate="menu_games">Games</span>
+            <span class="menu-badge">3</span>
+        </a>
+        <a href="#" class="menu-item" id="menu-friends">
+            <i class="fas fa-users"></i>
+            <span data-translate="menu_friends">Friends</span>
+        </a>
+        <a href="#" class="menu-item" id="menu-profile">
+            <i class="fas fa-user"></i>
+            <span data-translate="menu_profile">Profile</span>
+        </a>
+    </div>
+    
     <script>
         // Backend URL
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby5wg6KePWqbAvaEJh5XIIaDzL0bSw9duLEo7jfZ2ODw1uw4vzWOAJvj2oa__S2_BDKCw/exec';
@@ -898,10 +1169,14 @@
             let gameTime = 180;
             let lobbyInterval = null;
             let currentLanguage = 'ar';
+            let scores = {}; // To store scores for each category
             
             // Audio elements
             const timeoutSound = document.getElementById('timeout-sound');
             const notificationSound = document.getElementById('notification-sound');
+            
+            // Menu elements
+            const menuItems = document.querySelectorAll('.menu-item');
             
             // System sound functions
             function playSystemAlarm() {
@@ -998,6 +1273,27 @@
                 }
             }
             
+            // Menu item click handler
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all items
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Play notification sound
+                    playSystemNotification();
+                    
+                    // Here you would typically navigate to different sections
+                    // For this demo, we'll just show a status message
+                    const menuText = this.querySelector('span').textContent;
+                    showStatus(`Navigating to ${menuText}...`, 'info');
+                });
+            });
+            
             // Translations
             const translations = {
                 en: {
@@ -1038,6 +1334,7 @@
                     submit_answers: "Submit Answers",
                     submission_status: "Submission Status",
                     your_answers: "Your Submitted Answers",
+                    your_score: "Your Score",
                     player_submitted: "has submitted answers!",
                     you_submitted: "You submitted answers!",
                     submitted: "Submitted",
@@ -1051,7 +1348,11 @@
                     game_cancelled: "Game cancelled",
                     cancellation_warning: "Game will be cancelled in 30 seconds",
                     invalid_code: "Please enter a valid 6-digit game code",
-                    required: "is required"
+                    required: "is required",
+                    menu_home: "Home",
+                    menu_games: "Games",
+                    menu_friends: "Friends",
+                    menu_profile: "Profile"
                 },
                 ar: {
                     game_title: "لعبة الاتصال",
@@ -1091,6 +1392,7 @@
                     submit_answers: "تقديم الإجابات",
                     submission_status: "حالة التقديم",
                     your_answers: "إجاباتك المقدمة",
+                    your_score: "نقاطك",
                     player_submitted: "قام بتقديم الإجابات!",
                     you_submitted: "لقد قدمت إجاباتك!",
                     submitted: "تم التقديم",
@@ -1104,7 +1406,11 @@
                     game_cancelled: "تم إلغاء اللعبة",
                     cancellation_warning: "سيتم إلغاء اللعبة خلال 30 ثانية",
                     invalid_code: "الرجاء إدخال رمز لعبة صالح مكون من 6 أرقام",
-                    required: "مطلوب"
+                    required: "مطلوب",
+                    menu_home: "الرئيسية",
+                    menu_games: "الألعاب",
+                    menu_friends: "الأصدقاء",
+                    menu_profile: "الملف الشخصي"
                 }
             };
             
@@ -1125,6 +1431,7 @@
             const answersGrid = document.getElementById('answers-grid');
             const gameTimerValue = document.querySelector('#game-section .timer-value');
             const languageToggle = document.getElementById('language-toggle');
+            const totalScoreDisplay = document.getElementById('total-score');
             
             // Buttons
             document.getElementById('host-game').addEventListener('click', hostNewGame);
@@ -1132,6 +1439,25 @@
             document.getElementById('start-game').addEventListener('click', startGame);
             document.getElementById('cancel-game').addEventListener('click', startCancelCountdown);
             document.getElementById('submit-answers').addEventListener('click', submitAnswers);
+            
+            // Score buttons
+            document.querySelectorAll('.score-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    const value = parseInt(this.dataset.value);
+                    
+                    // Update score for this category
+                    scores[category] = value;
+                    
+                    // Update button states
+                    const buttons = document.querySelectorAll(`.score-btn[data-category="${category}"]`);
+                    buttons.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Calculate and update total score
+                    updateTotalScore();
+                });
+            });
             
             // Language toggle
             languageToggle.addEventListener('click', function(e) {
@@ -1163,6 +1489,12 @@
                 cancelTimer.style.display = 'none';
                 answersDisplay.style.display = 'none';
                 
+                // Initialize scores
+                const categories = ['boy-name', 'girl-name', 'fruit', 'vegetable', 'object', 'animal', 'profession', 'city', 'country', 'clothing'];
+                categories.forEach(cat => {
+                    scores[cat] = 0; // Default to 0 for each category
+                });
+                
                 // Generate a sample game code for display
                 gameCode = generateGameCode();
                 gameCodeDisplay.textContent = gameCode;
@@ -1170,6 +1502,14 @@
                 
                 // Apply initial translations
                 applyTranslations();
+            }
+            
+            function updateTotalScore() {
+                let total = 0;
+                for (const category in scores) {
+                    total += scores[category];
+                }
+                totalScoreDisplay.textContent = total;
             }
             
             function applyTranslations() {
@@ -1599,12 +1939,16 @@
                     return;
                 }
                 
-                // Call backend to submit answers
-                const result = await callBackend('submitAnswers', {
+                // Include scores in the submission
+                const submission = {
                     gameCode: gameCode,
                     playerName: playerName,
-                    ...answers
-                });
+                    ...answers,
+                    scores: scores
+                };
+                
+                // Call backend to submit answers
+                const result = await callBackend('submitAnswers', submission);
                 
                 if (!result.success) return;
                 
@@ -1657,6 +2001,7 @@
                     answerCard.innerHTML = `
                         <h4><i class="${category.icon}"></i> ${category.name}</h4>
                         <p>${answers[category.id]}</p>
+                        <p style="color: var(--warning); margin-top: 10px;">Score: ${scores[category.id.replace('Name', '-name')] || 0}</p>
                     `;
                     answersGrid.appendChild(answerCard);
                 }
