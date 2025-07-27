@@ -686,6 +686,14 @@
     <!-- Notification container -->
     <div id="notification-container"></div>
     
+    <!-- Hidden audio elements for system sounds -->
+    <audio id="timeout-sound" preload="auto">
+        <!-- This will use the browser's default alarm sound -->
+    </audio>
+    <audio id="notification-sound" preload="auto">
+        <!-- This will use the browser's default notification sound -->
+    </audio>
+    
     <div class="container">
         <header>
             <div class="language-toggle" id="language-toggle">
@@ -891,6 +899,105 @@
             let lobbyInterval = null;
             let currentLanguage = 'ar';
             
+            // Audio elements
+            const timeoutSound = document.getElementById('timeout-sound');
+            const notificationSound = document.getElementById('notification-sound');
+            
+            // System sound functions
+            function playSystemAlarm() {
+                try {
+                    // Create a simple oscillator to simulate system alarm
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.5);
+                    
+                    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.1, audioContext.currentTime + 0.5);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 1);
+                    
+                    // Repeat the alarm 3 times
+                    setTimeout(() => {
+                        const oscillator2 = audioContext.createOscillator();
+                        const gainNode2 = audioContext.createGain();
+                        
+                        oscillator2.type = 'sine';
+                        oscillator2.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.5);
+                        
+                        gainNode2.gain.setValueAtTime(0.5, audioContext.currentTime);
+                        gainNode2.gain.exponentialRampToValueAtTime(0.1, audioContext.currentTime + 0.5);
+                        
+                        oscillator2.connect(gainNode2);
+                        gainNode2.connect(audioContext.destination);
+                        
+                        oscillator2.start();
+                        oscillator2.stop(audioContext.currentTime + 1);
+                        
+                        setTimeout(() => {
+                            const oscillator3 = audioContext.createOscillator();
+                            const gainNode3 = audioContext.createGain();
+                            
+                            oscillator3.type = 'sine';
+                            oscillator3.frequency.setValueAtTime(800, audioContext.currentTime);
+                            oscillator3.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.5);
+                            
+                            gainNode3.gain.setValueAtTime(0.5, audioContext.currentTime);
+                            gainNode3.gain.exponentialRampToValueAtTime(0.1, audioContext.currentTime + 0.5);
+                            
+                            oscillator3.connect(gainNode3);
+                            gainNode3.connect(audioContext.destination);
+                            
+                            oscillator3.start();
+                            oscillator3.stop(audioContext.currentTime + 1);
+                        }, 1000);
+                    }, 1000);
+                } catch (e) {
+                    console.error("Couldn't generate system alarm:", e);
+                    // Fallback to using the audio element with system beep
+                    if (timeoutSound) {
+                        timeoutSound.currentTime = 0;
+                        timeoutSound.play().catch(e => console.log("Fallback alarm failed:", e));
+                    }
+                }
+            }
+            
+            function playSystemNotification() {
+                try {
+                    // Create a simple beep for notifications
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                    
+                    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                } catch (e) {
+                    console.error("Couldn't generate notification sound:", e);
+                    // Fallback to using the audio element with system beep
+                    if (notificationSound) {
+                        notificationSound.currentTime = 0;
+                        notificationSound.play().catch(e => console.log("Fallback notification failed:", e));
+                    }
+                }
+            }
+            
             // Translations
             const translations = {
                 en: {
@@ -934,7 +1041,17 @@
                     player_submitted: "has submitted answers!",
                     you_submitted: "You submitted answers!",
                     submitted: "Submitted",
-                    pending: "Pending"
+                    pending: "Pending",
+                    time_up: "Time's up! Game over!",
+                    fill_all: "Please fill all answers before submitting",
+                    answers_submitted: "Your answers have been submitted!",
+                    game_created: "Game created successfully!",
+                    game_joined: "You've joined the game!",
+                    game_started: "Game started!",
+                    game_cancelled: "Game cancelled",
+                    cancellation_warning: "Game will be cancelled in 30 seconds",
+                    invalid_code: "Please enter a valid 6-digit game code",
+                    required: "is required"
                 },
                 ar: {
                     game_title: "لعبة الاتصال",
@@ -977,7 +1094,17 @@
                     player_submitted: "قام بتقديم الإجابات!",
                     you_submitted: "لقد قدمت إجاباتك!",
                     submitted: "تم التقديم",
-                    pending: "قيد الانتظار"
+                    pending: "قيد الانتظار",
+                    time_up: "انتهى الوقت! انتهت اللعبة!",
+                    fill_all: "يرجى ملء جميع الإجابات قبل التقديم",
+                    answers_submitted: "تم تقديم إجاباتك بنجاح!",
+                    game_created: "تم إنشاء اللعبة بنجاح!",
+                    game_joined: "لقد انضممت إلى اللعبة!",
+                    game_started: "بدأت اللعبة!",
+                    game_cancelled: "تم إلغاء اللعبة",
+                    cancellation_warning: "سيتم إلغاء اللعبة خلال 30 ثانية",
+                    invalid_code: "الرجاء إدخال رمز لعبة صالح مكون من 6 أرقام",
+                    required: "مطلوب"
                 }
             };
             
@@ -1096,6 +1223,11 @@
                 statusMessage.classList.add(`status-${type}`);
                 statusMessage.style.display = 'block';
                 
+                // Play notification sound for success/error messages
+                if (type === 'success' || type === 'error') {
+                    playSystemNotification();
+                }
+                
                 // Hide the message after 4 seconds
                 setTimeout(() => {
                     statusMessage.style.display = 'none';
@@ -1122,6 +1254,9 @@
                 setTimeout(() => {
                     notification.classList.add('show');
                 }, 100);
+                
+                // Play notification sound
+                playSystemNotification();
                 
                 // Close button
                 notification.querySelector('.notification-close').addEventListener('click', function() {
@@ -1426,7 +1561,11 @@
                     
                     if (gameTime <= 0) {
                         clearInterval(gameTimer);
+                        playSystemAlarm(); // Play the system alarm sound
                         showStatus(translations[currentLanguage]['time_up'], 'error');
+                        
+                        // Disable the submit button
+                        document.getElementById('submit-answers').disabled = true;
                     }
                 }, 1000);
             }
